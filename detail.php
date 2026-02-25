@@ -1,82 +1,57 @@
 <html>
 
 <head>
-    <title>Display Student Detail</title>
+    <title> Display Selected Customer Information 65</title>
 </head>
 
 <body>
 
     <?php
+    if (isset($_GET["CustomerID"])) {
+        $strCustomerID = $_GET["CustomerID"];
+    }
+    echo $strCustomerID;
+
     require "connect.php";
-
-    if (isset($_GET["Student_ID"])) {
-        $Student_ID = $_GET["Student_ID"];
-    } else {
-        die("ไม่พบรหัสนักเรียน");
-    }
-
-    $sql = "SELECT *
-        FROM register_detail
-        INNER JOIN register 
-            ON register_detail.Regis_ID = register.Register_ID
-        INNER JOIN student 
-            ON register.Student_ID = student.Student_ID
-        INNER JOIN course 
-            ON register_detail.Course_ID = course.Course_ID
-        WHERE student.Student_ID = ?";
-
+    $sql = "SELECT * FROM customer WHERE CustomerID = ?";
+    $params = array($strCustomerID);
     $stmt = $conn->prepare($sql);
-    $stmt->execute([$Student_ID]);
+    $stmt->execute($params);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$result) {
-        die("ไม่พบข้อมูล");
-    }
     ?>
-
-    <h2>รายละเอียดนักเรียน</h2>
-
-    <table width="500" border="1">
-
+    <table width="300" border="1">
         <tr>
-            <th>รหัสนักเรียน</th>
-            <td><?php echo $result["Student_ID"]; ?></td>
+            <th width="325">รหัสลูกค้าสมาชิก</th>
+            <td width="240"><?php echo $result["CustomerID"]; ?></td>
         </tr>
 
         <tr>
-            <th>ชื่อ</th>
-            <td><?php echo $result["Student_Fname"]; ?></td>
+            <th width="130">ชื่อ</th>
+            <td><?php echo $result["Name"]; ?></td>
+        </tr>
+        <tr>
+            <th width="130">BirthDate</th>
+            <td><?php echo $result["Birthdate"]; ?></td>
         </tr>
 
         <tr>
-            <th>รายวิชา</th>
-            <td><?php echo $result["Course_name"]; ?></td>
+            <th width="130">Email</th>
+            <td><?php echo $result["Email"]; ?></td>
         </tr>
 
         <tr>
-            <th>เทอม</th>
-            <td><?php echo $result["Term"]; ?></td>
+            <th width="130">CountryCode</th>
+            <td><?php echo $result["CountryCode"]; ?></td>
         </tr>
 
         <tr>
-            <th>วันที่ลงทะเบียน</th>
-            <td><?php echo $result["Register_dateTIme"]; ?></td>
+            <th width="130">OutstandingDebt</th>
+            <td><?php echo $result["OutstandingDebt"]; ?></td>
         </tr>
-
-        <tr>
-            <th>เกรด</th>
-            <td><?php echo $result["Grade"]; ?></td>
-        </tr>
-
     </table>
-
-    <br>
-    <a href="selec1.php">← กลับหน้าหลัก</a>
-
     <?php
     $conn = null;
     ?>
-
 </body>
 
 </html>
